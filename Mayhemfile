@@ -1,0 +1,5 @@
+project: rnshah9/mayhem-bic
+target: genaccess
+
+cmds:
+  - cmd: /bic/src/genaccess @@
