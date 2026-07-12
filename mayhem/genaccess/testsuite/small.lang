@@ -1,0 +1,13 @@
+(defbasetypes
+  (integer "mpz_t")
+  (ffloat "mpf_t")
+  (string "char *")
+  (jmp_buf "jmp_buf")
+  (ptr "void *")
+  (sz "size_t")
+  (flag "bool")
+  (ffi_cif "ffi_cif *")
+  (ffi_types "ffi_type **")
+  (ffi_closure "ffi_closure *")
+  (comp_decl_type "compound_type")
+  (live_var_val "union value *"))

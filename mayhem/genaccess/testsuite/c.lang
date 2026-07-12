@@ -1,0 +1,316 @@
+(defbasetypes
+  (integer "mpz_t")
+  (ffloat "mpf_t")
+  (string "char *")
+  (jmp_buf "jmp_buf")
+  (ptr "void *")
+  (sz "size_t")
+  (flag "bool")
+  (ffi_cif "ffi_cif *")
+  (ffi_types "ffi_type **")
+  (ffi_closure "ffi_closure *")
+  (comp_decl_type "compound_type")
+  (live_var_val "union value *"))
+
+(deftype T_INTEGER "Constant integer" "tINT"
+         (("VAL" integer)))
+
+(deftype T_FLOAT "Constant floating point" "tFLOAT"
+         (("VAL" ffloat)))
+
+(deftype T_STRING "Constant string" "tSTRING"
+         (("VAL" string)))
+
+(deftype T_P_INC "Increment (postfix)" "tPINC"
+         ("EXP"))
+
+(deftype T_P_DEC "Decrement (postfix)" "tPDEC"
+         ("EXP"))
+
+(deftype T_INC "Increment (unary)" "tINC"
+         ("EXP"))
+
+(deftype T_DEC "Decrement (unary)" "tDEC"
+         ("EXP"))
+
+(deftype T_NEGATE "Negate" "tNEGATE"
+         ("EXP"))
+
+(deftype T_ONES_COMP "One's Complement" "tONES_COMP"
+         ("EXP"))
+
+(deftype T_SIZEOF "Size of" "tSZOF"
+         ("EXP"))
+
+(deftype T_IDENTIFIER "Identifier" "tID"
+         (("STR" string)))
+
+(deftype T_POINTER "Pointer" "tPTR"
+         ("EXP" "QUALIFIERS"))
+
+(deftype T_INSPECT "Inspect Identifier" "tINSPECT"
+         ("EXP"))
+
+(deftype T_MUL "Multiply" "tMUL"
+         ("LHS" "RHS"))
+
+(deftype T_DIV "Divide" "tDIV"
+         ("LHS" "RHS"))
+
+(deftype T_MOD "Modulus" "tMOD"
+         ("LHS" "RHS"))
+
+(deftype T_ADD "Addition" "tADD"
+         ("LHS" "RHS"))
+
+(deftype T_SUB "Subtraction" "tSUB"
+         ("LHS" "RHS"))
+
+(deftype T_LSHIFT "Left Shift" "tLSHIFT"
+         ("LHS" "RHS"))
+
+(deftype T_RSHIFT "Right Shift" "tRSHIFT"
+         ("LHS" "RHS"))
+
+(deftype T_LT "Less than" "tLT"
+         ("LHS" "RHS"))
+
+(deftype T_GT "Greater than" "tGT"
+         ("LHS" "RHS"))
+
+(deftype T_LTEQ "Less than or equal" "tLTEQ"
+         ("LHS" "RHS"))
+
+(deftype T_GTEQ "Less than or equal" "tGTEQ"
+         ("LHS" "RHS"))
+
+(deftype T_EQ "Equal" "tEQ"
+         ("LHS" "RHS"))
+
+(deftype T_N_EQ "Not Equal" "tN_EQ"
+         ("LHS" "RHS"))
+
+(deftype T_L_OR "Logical OR" "tL_OR"
+         ("LHS" "RHS"))
+
+(deftype T_I_OR "Inclusive OR" "tI_OR"
+         ("LHS" "RHS"))
+
+(deftype T_X_OR "Exclusive OR" "tX_OR"
+         ("LHS" "RHS"))
+
+(deftype T_I_AND "Inclusive AND" "tI_AND"
+         ("LHS" "RHS"))
+
+(deftype T_L_AND "Logical AND" "tL_AND"
+         ("LHS" "RHS"))
+
+(deftype T_COMMA "Comma operator" "tCOMMA"
+         ("LHS" "RHS"))
+
+(deftype T_IF "If" "tIF"
+         ("COND" "TRUE_STMTS" "ELSE_STMTS"))
+
+(deftype T_ASSIGN "Assignment" "tASSIGN"
+         ("LHS" "RHS"))
+
+(deftype T_CAST "Cast" "tCAST"
+         ("NEWTYPE" "EXP"))
+
+(deftype T_TYPEDEF "typedef storage class specifier")
+(deftype T_EXTERN "external storage class specifier")
+(deftype T_STATIC "static storage class specifier")
+(deftype T_AUTO "auto storage class specifier")
+(deftype T_REGISTER "register storage class specifier")
+
+(deftype T_VOID_TS "void")
+(deftype T_CHAR_TS "char")
+(deftype T_SHORT_TS "short")
+(deftype T_INT_TS "integer")
+(deftype T_LONG_TS "long")
+(deftype T_FLOAT_TS "float")
+(deftype T_DOUBLE_TS "double")
+(deftype T_SIGNED_TS "signed")
+(deftype T_UNSIGNED_TS "unsigned")
+(deftype T_BOOL_TS "bool")
+
+(deftype T_CONST "const type qualifier")
+(deftype T_RESTRICT "restrict type qualifier")
+(deftype T_VOLATILE "volatile type qualifier")
+
+(deftype T_EMPTY "Empty block")
+(deftype T_EXPR_LIST "Expression List" "tEXPR_LIST"
+         ("CHAIN"))
+
+(deftype T_INLINE "inline function specifier")
+
+(deftype T_BITFIELD "Bitfield declarator" "tBITFIELD"
+         ("SZ" "DECLARATOR"))
+
+(deftype T_COMP_ACCESS "Compound Access" "tCOMP_ACCESS"
+         ("OBJ" "MEMBER"))
+
+(deftype T_ARRAY_ACCESS "Array Access" "tARR_ACCESS"
+         ("OBJ" "IDX"))
+
+(deftype T_ADDR "Address Operator" "tADDR"
+         ("EXP"))
+
+(deftype T_DEREF "Address Dereference" "tDEREF"
+         ("EXP"))
+
+(deftype T_ARRAY "Array Declaration" "tARRAY"
+         ("DECL" "QUALIFIERS" "SZ"))
+
+(deftype T_ARRAY_TYPE "Array Type" "tARRAY_TYPE"
+         ("BASE_TYPE" "SZ"))
+
+(deftype T_DECL "Declaration" "tDECL"
+         ("SPECS" "DECLS"
+          ("OFFSET" sz)))
+
+(deftype T_TYPE_SPECIFIER "Type specifier" "tTYPE_SPECIFIER"
+         ("SPECS" "DECL"))
+
+(deftype T_DECL_COMPOUND "Compound Declataion" "tCOMP_DECL"
+         ("ID" "DECLS"
+               ("SZ" sz)
+               ("EXPANDED" flag)
+               ("TYPE"  comp_decl_type)))
+
+(deftype T_FN "Function" "tFN"
+         ("DECL" "ARGS" "RET_TYPE" "STMTS"))
+
+(deftype T_BUILTIN "Builtin function handler" "tBUILTIN"
+         (("HANDLER" ptr)))
+
+(deftype T_FN_CALL "Function Call" "tFNCALL"
+         ("ID" "ARGS"))
+
+(deftype T_CLOSURE "Closure Call" "tCLOSURE"
+         ("ARG_TYPES" "RET_TYPE" "FN"
+          ("CIF" ffi_cif)
+          ("TYPES" ffi_types)
+          ("CLOSURE" ffi_closure)))
+
+(deftype T_FN_ARG "Function Argument" "tFNARG"
+         ("EXP"))
+
+(deftype T_INFIX "Infix Operator" "tINFIX"
+         ("COND" "TRUE_STMT" "FALSE_STMT"))
+
+(deftype T_LOOP_FOR "For loop" "tFLOOP"
+         ("INIT" "COND" "AFTER" "STMTS"))
+
+(deftype T_LOOP_WHILE "While loop" "tWLOOP"
+         ("COND" "STMTS"))
+
+(deftype T_RETURN "Function return" "tRET"
+         ("EXP"))
+
+(deftype T_BREAK "Break statement")
+
+(deftype T_REPL "Switch to REPL")
+
+(deftype T_ENUMERATOR "Enumerator" "tENUM"
+         ("NAME" "ENUMS"))
+
+(deftype T_VARIADIC "Variadic Function Argument")
+
+(deftype T_LIVE_VAR "Live Variable" "tLV"
+         ("TYPE"
+          ("VAL" live_var_val)
+          ("IS_ARRAY" flag)
+          ("ARRAY_SZ" sz)))
+
+(deftype T_LIVE_COMPOUND "Live Compound" "tLV_COMP"
+         ("DECL" "MEMBERS"
+                 ("BASE" ptr)))
+
+(deftype CHAIN_HEAD "Tree Chain Head")
+
+(deftype E_CTX "Evaluator Context" "tECTX"
+         ("ID_MAP" "STRUCT_ID_MAP" "UNION_ID_MAP" "PARENT_CTX" "ALLOC_CHAIN" "NAME" "RETVAL"
+          ("JMP_BUF" jmp_buf)
+          ("SHOULD_BREAK" flag)
+          ("IS_FN_CALL" flag)
+          ("IS_STATIC" flag)))
+
+(deftype E_ALLOC "Evaluator allocation" "tALLOC"
+         (("PTR" ptr)))
+
+(deftype E_INCOMP_TYPE "Incompletel type")
+
+(deftype E_MAP "Evaluator map" "tEMAP"
+         ("LEFT" "RIGHT"))
+
+(deftype CPP_INCLUDE "C preprocessor include directive" "tCPP_INCLUDE"
+         (("STR" string)))
+
+(deftype D_T_VOID "Void type")
+
+(deftype T_EXT_FUNC "External function" "tEXT_FUNC"
+         ("FN"))
+
+(defctype D_T_CHAR "signed char" "char" "d" "ival" ffi_type_schar)
+(defctype D_T_SHORT "signed short" "short" "hd" "ival" ffi_type_sshort)
+(defctype D_T_INT "signed integer" "int" "d" "ival" ffi_type_sint)
+(defctype D_T_LONG "signed long" "long" "ld" "ival" ffi_type_slong)
+(defctype D_T_LONGLONG "signed long long" "long long" "lld" "ival" ffi_type_slong)
+(defctype D_T_UCHAR "unsigned char" "unsigned char" "u" "ival" ffi_type_uchar)
+(defctype D_T_USHORT "signed short" "unsigned short" "hu" "ival" ffi_type_ushort)
+(defctype D_T_UINT "unsigned integer" "unsigned int" "u" "ival" ffi_type_uint)
+(defctype D_T_ULONG "unsigned long" "unsigned long" "lu" "ival" ffi_type_ulong)
+(defctype D_T_ULONGLONG "unsigned long long" "unsigned long long" "llu" "ival" ffi_type_ulong)
+(defctype D_T_FLOAT "float" "float" "f" "dval" ffi_type_float)
+(defctype D_T_DOUBLE "double" "double" "f" "dval" ffi_type_double)
+(defctype D_T_LONGDOUBLE "long double" "long double" "Lf" "dval" ffi_type_longdouble)
+(defctype D_T_PTR "pointer" "void *" "p" "ival" ffi_type_pointer "tDTPTR"
+          ("EXP"))
+
+(defspecifier D_T_CHAR ((T_CHAR_TS)
+                        (T_SIGNED_TS T_CHAR_TS)))
+
+(defspecifier D_T_SHORT ((T_SHORT_TS)
+                         (T_SIGNED_TS T_SHORT_TS)
+                         (T_SHORT_TS T_INT_TS)
+                         (T_SIGNED_TS T_SHORT_TS T_INT_TS)))
+
+(defspecifier D_T_INT ((T_INT_TS)
+                       (T_SIGNED_TS)
+                       (T_SIGNED_TS T_INT_TS)))
+
+(defspecifier D_T_LONG ((T_LONG_TS)
+                        (T_SIGNED_TS T_LONG_TS)
+                        (T_LONG_TS T_INT_TS)
+                        (T_SIGNED_TS T_LONG_TS T_INT_TS)))
+
+(defspecifier D_T_LONGLONG ((T_LONG_TS T_LONG_TS)
+                            (T_SIGNED_TS T_LONG_TS T_LONG_TS)
+                            (T_LONG_TS T_LONG_TS T_INT_TS)
+                            (T_SIGNED_TS T_LONG_TS T_LONG_TS T_INT_TS)))
+
+(defspecifier D_T_UCHAR ((T_UNSIGNED_TS T_CHAR_TS)))
+
+(defspecifier D_T_USHORT ((T_UNSIGNED_TS T_SHORT_TS)
+                          (T_UNSIGNED_TS T_SHORT_TS T_INT_TS)))
+
+(defspecifier D_T_UINT ((T_UNSIGNED_TS)
+                        (T_UNSIGNED_TS T_INT_TS)))
+
+(defspecifier D_T_ULONG ((T_UNSIGNED_TS T_LONG_TS)
+                         (T_UNSIGNED_TS T_LONG_TS T_INT_TS)))
+
+(defspecifier D_T_ULONGLONG ((T_UNSIGNED_TS T_LONG_TS T_LONG_TS)
+                             (T_UNSIGNED_TS T_LONG_TS T_LONG_TS T_INT_TS)))
+
+(defspecifier D_T_FLOAT ((T_FLOAT_TS)))
+(defspecifier D_T_DOUBLE ((T_DOUBLE_TS)))
+(defspecifier D_T_LONGDOUBLE ((T_LONG_TS T_DOUBLE_TS)))
+(defspecifier D_T_VOID ((T_VOID_TS)))
+(defspecifier :ignore T_EXTERN)
+(defspecifier :ignore T_TYPEDEF)
+(defspecifier :ignore T_STATIC)
+(defspecifier :self T_IDENTIFIER)
+(defspecifier :self T_DECL_COMPOUND)
+(defspecifier :self T_ENUMERATOR)
