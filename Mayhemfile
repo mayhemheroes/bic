@@ -1,0 +1,5 @@
+project: bic
+target: genaccess
+
+cmds:
+  - cmd: /genaccess @@
